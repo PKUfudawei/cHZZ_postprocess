@@ -3,6 +3,7 @@ import numpy as np
 import numba as nb
 from coffea.nanoevents.methods import vector
 
+
 @nb.njit
 def inner_dim_indexing(target, index, builder):
     for t, idx in zip(target, index):
@@ -12,6 +13,7 @@ def inner_dim_indexing(target, index, builder):
                 builder.real(t[i])
         builder.end_list()
     return builder
+
 
 @nb.njit
 def pos_to_bool(target, pos, builder):
@@ -29,7 +31,8 @@ def pos_to_bool(target, pos, builder):
                 builder.boolean(False)
         builder.end_list()
     return builder
-                
+
+
 def ntupler(df, is_hc=False, store_gen=True, store_pfcands=False, store_flat_only=False):
     if store_gen:
         _pt = ak.singletons(df.GENH_pt[:, -1])
@@ -117,7 +120,7 @@ def ntupler(df, is_hc=False, store_gen=True, store_pfcands=False, store_flat_onl
         genlep['ptrel'] = genlep.pt / _gen_H_lo_4.pt
         genlep['deta'] = genlep.eta - _gen_H_lo_4.pt
         genlep['dphi'] = genlep.phi - _gen_H_lo_4.phi
-        
+
 
     # GEN B/C Hadrons
     if store_gen:
@@ -442,7 +445,7 @@ def ntupler(df, is_hc=False, store_gen=True, store_pfcands=False, store_flat_onl
         out_tree['cleanedsv'] = cleanedsv
         if store_pfcands:
             out_tree['pfcand'] = pfcand
-    
+
     else:
         H_mask = H.mask[ak.num(H) > 0]
         Z1_mask = Z1.mask[ak.num(Z1) > 0]
@@ -464,20 +467,20 @@ def ntupler(df, is_hc=False, store_gen=True, store_pfcands=False, store_flat_onl
         cleanedjet_leadc = cleanedjet.mask[ak.num(cleanedjet) > 0][cleanedjet_inds][:, 0]
         for b in ak.fields(cleanedjet):
             out_tree[f'cleanedjet_leadc2c_{b}'] = ak.fill_none(cleanedjet_leadc[b], -1)
-        
+
         out_tree['n_cleanedsv'] = ak.num(cleanedsv)
         cleanedsv_inds = ak.singletons(ak.argmax(cleanedsv.ParticleNet_c + cleanedsv.ParticleNet_cc, axis=-1))
         cleanedsv_leadc = cleanedsv.mask[ak.num(cleanedsv) > 0][cleanedsv_inds][:, 0]
         for b in ak.fields(cleanedsv):
             out_tree[f'cleanedsv_leadc2c_{b}'] = ak.fill_none(cleanedsv_leadc[b], -1)
-        
+
         # jet/sv + H/Z features (features added in v3)
         cleaned_jet_lo = jet_lo[df.jet_iscleanH4l]
         cleaned_jet_lo = cleaned_jet_lo[cleaned_jet_lo.pt > 15]
         cleanedjet_leadc_lo = cleaned_jet_lo.mask[ak.num(cleanedjet) > 0][cleanedjet_inds][:, 0]
         cleanedsv_lo = sv_lo[sv_is_cleaned]
         cleanedsv_leadc_lo = cleanedsv_lo.mask[ak.num(cleanedsv) > 0][cleanedsv_inds][:, 0]
-        
+
         for name, obj in zip(['H', 'Z1', 'Z2'], [_H_lo.mask[ak.num(H) > 0][:, 0], _Z1_lo.mask[ak.num(Z1) > 0][:, 0], _Z2_lo.mask[ak.num(Z2) > 0][:, 0]]):
             out_tree[f'cleanedjet_leadc2c_{name}_mass'] = ak.fill_none((cleanedjet_leadc_lo + obj).mass, -99.)
             out_tree[f'cleanedjet_leadc2c_{name}_ptrel'] = ak.fill_none(cleanedjet_leadc_lo.pt / obj.pt, -99.)

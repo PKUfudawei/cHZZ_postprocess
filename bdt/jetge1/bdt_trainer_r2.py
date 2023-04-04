@@ -24,7 +24,7 @@ parser.add_argument('--model-dir', help='Where to save/load the xgb model.')
 parser.add_argument('--bdt-varname', help='BDT variable name to store.')
 parser.add_argument('--mode', default='all', choices=['all', 'jetge1', 'jet0_svge1'], help='mode')
 parser.add_argument('-i', '--inputdir', help='Input dir')
-parser.add_argument('-o', '--outputdir', help='Output dir')
+parser.add_argument('-o', '--outputdir', default='./', help='Output dir')
 args = parser.parse_args()
 
 if not args.model_dir:
@@ -44,7 +44,7 @@ flist_train = [
 
 sig_lab = flist_train[0][0]
 sig_nevt = None
-flist_pred = [k+'.root' for k in ['HC_4FSFxFx', 'ggH125']]
+flist_pred = flist_train
 
 if args.mode == 'jetge1':
     basesel = '(genWeight>0) & (pass_fiducial) & (H_mass>=118) & (H_mass<=130) & (n_cleanedjet>=1)' # require >=1 jet, use original train varaibles
@@ -128,16 +128,18 @@ all_vars = set(train_vars + obs_vars)
 def add_vars(df):
     return df
 
+
 def fix_uint64_branches(df):
     for k in df.keys():
         if df[k].dtype in (np.uint32, np.uint64) :
             df[k] = df[k].astype(np.int64)
     return df
 
+
 def make_dmatrix(filepath='', predict=False, k_folds=5, random_state=None):
     if predict:
         print('...loading', filepath)
-        df = fix_uint64_branches(uproot.open(filepath+':Events').arrays(set(train_vars) | set(['Event']), library='pd'))
+        df = fix_uint64_branches(uproot.open(filepath + ':Events').arrays(set(train_vars) | set(['Event']), library='pd'))
         print('...done')
         X = df[train_vars]
         outputs = []
@@ -334,19 +336,19 @@ def predict():
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    for f in flist_pred:
-        fpath = os.path.join(args.inputdir, f)
+    for mc, f in flist_pred:
+        fpath = f
         if not os.path.exists(fpath):
             print('Ignore non-existing file: %s' % fpath)
         df, dmats = make_dmatrix(fpath, predict=True, k_folds=k_folds)
         df[args.bdt_varname] = -99 * np.ones(df.shape[0])
         for idx, (pos, dmat) in enumerate(dmats):
-            bst = xgb.Booster({'predictor':'cpu_predictor'})
+            bst = xgb.Booster({'predictor': 'cpu_predictor'})
             bst.load_model('%s.%d' % (os.path.join(args.model_dir, model_name), idx))
             df.loc[pos, args.bdt_varname] = bst.predict(dmat)
         assert not np.any(df[args.bdt_varname] == -99)
 
-        outputpath = os.path.join(output_dir, f)
+        outputpath = os.path.join(output_dir, f'{mc}.root')
         if not os.path.exists(os.path.dirname(outputpath)):
             os.makedirs(os.path.dirname(outputpath))
         print('Write prediction file to %s' % outputpath)
