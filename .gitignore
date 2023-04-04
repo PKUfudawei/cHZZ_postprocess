@@ -57,5 +57,6 @@ node_modules
 .ipynb_checkpoints/
 
 # others
+*.root
 samples/
 test/
