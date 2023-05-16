@@ -353,16 +353,13 @@ def predict():
             os.makedirs(os.path.dirname(outputpath))
         print('Write prediction file to %s' % outputpath)
 
-#         from root_numpy import array2root
-#         array2root(df.to_records(index=False), filename=outputpath, treename='Events', mode='RECREATE')
-
         import uproot3
         with uproot3.recreate(outputpath, compression=uproot3.write.compress.LZ4(4)) as fout:
-            fout['Events'] = uproot3.newtree({k:df[k].dtype for k in df.keys()})
+            fout['Events'] = uproot3.newtree({k: df[k].dtype for k in df.keys()})
             step = 2 ** 20
             start = 0
             while start < len(df) - 1:
-                fout['Events'].extend({k:df[k][start:start + step].values for k in df.keys()})
+                fout['Events'].extend({k: df[k][start:start + step].values for k in df.keys()})
                 start += step
 
 

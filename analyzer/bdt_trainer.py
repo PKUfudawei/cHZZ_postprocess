@@ -234,8 +234,8 @@ def train(hyper_params=None):
     param['eval_metric'] = ['error', 'auc', 'logloss']
     # param['min_child_weight'] = 1
     # param['gamma']=0.01
-    param['eta'] = 0.01
-    param['max_depth'] = 4
+    param['eta'] = 0.005
+    param['max_depth'] = 5
     # param['colsample_bytree'] = 0.8
     param['subsample'] = 0.8
 
@@ -301,7 +301,7 @@ def train(hyper_params=None):
 
         # testing
         del bst
-        bst = xgb.Booster({'predictor':'cpu_predictor'})
+        bst = xgb.Booster({'predictor': 'cpu_predictor'})
         bst.load_model('%s.%d' % (model_file, idx))
         y_preds.append(bst.predict(d_test))
         y_labels.append(d_test.get_label())
