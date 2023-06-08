@@ -38,8 +38,8 @@ basedirs = [
     '/data/pubfs/fudawei/cHZZ_postprocess/bdt/',  # further include msv for a first check
 ]
 flist_train = [
-    ('HC_4FSFxFx', '/data/pubfs/fudawei/cHZZ_postprocess/samples/slimmed/mc/2018/HC_4FSFxFx/0.root'),
-    ('ggH125', '/data/pubfs/fudawei/cHZZ_postprocess/samples/slimmed/mc/2018/ggH/0.root')
+    ('HC_4FSFxFx', '/data/pubfs/fudawei/cHZZ_postprocess/samples/final_slimmed/mc/2018/HC_4FSFxFx/0.root'),
+    ('ggH125', '/data/pubfs/fudawei/cHZZ_postprocess/samples/final_slimmed/mc/2018/ggH/0.root')
 ]  # further include msv for a first check
 
 sig_lab = flist_train[0][0]

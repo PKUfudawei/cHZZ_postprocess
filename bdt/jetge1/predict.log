@@ -1,7 +1,7 @@
 ['H_pt', 'H_eta', 'cleanedjet_leadc2c_pt', 'cleanedjet_leadc2c_eta', 'cleanedjet_leadc2c_mass', 'cleanedjet_leadc2c_H_ptrel', 'cleanedjet_leadc2c_H_deta', 'cleanedjet_leadc2c_H_dphi', 'cleanedjet_leadc2c_H_dr', 'cleanedjet_leadc2c_H_mass', 'cleanedjet_leadc2c_Z1_ptrel', 'cleanedjet_leadc2c_Z1_deta', 'cleanedjet_leadc2c_Z1_dphi', 'cleanedjet_leadc2c_Z1_dr', 'cleanedjet_leadc2c_Z1_mass', 'cleanedjet_leadc2c_Z2_ptrel', 'cleanedjet_leadc2c_Z2_deta', 'cleanedjet_leadc2c_Z2_dphi', 'cleanedjet_leadc2c_Z2_dr', 'cleanedjet_leadc2c_Z2_mass']
-...loading /data/pubfs/fudawei/cHZZ_postprocess/samples/slimmed/mc/2018/HC_4FSFxFx/0.root
+...loading /data/pubfs/fudawei/cHZZ_postprocess/samples/final_slimmed/mc/2018/HC_4FSFxFx/0.root
 ...done
 Write prediction file to samples/predict/mc/2018/HC_4FSFxFx.root
-...loading /data/pubfs/fudawei/cHZZ_postprocess/samples/slimmed/mc/2018/ggH/0.root
+...loading /data/pubfs/fudawei/cHZZ_postprocess/samples/final_slimmed/mc/2018/ggH/0.root
 ...done
 Write prediction file to samples/predict/mc/2018/ggH125.root
